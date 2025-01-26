@@ -1,21 +1,33 @@
 # hugodk
 
-[Hugo](https://gohugo.io) docker image.
+Hugodk is a personalized [Hugo](https://gohugo.io) docker image.
 
-0.136.2, latest:
-- Hugo 0.136.2
-- Go 1.23.2
+## Versions
 
-By default, upon starting, the container
+The image tags follow Hugo release versions.
 
-- copies source code mounted at **/src** to **/workdir**.
-- run custom entrypoint scripts in **/entrypoint.d/*.sh**.
-- exec **hugo** with input commands.
+|Tags|Libs|
+|-|-|
+|0.136.2|Go 1.23.2 + Hugo 0.136.2|
+|0.142.0|Go 1.23.5 + Hugo 0.142.0 + DartSass 1.83.4|
+
+## Usage
+
+By default, upon starting, hugodk
+
+- copies source code mounted at `/src` to `/workdir`.
+- runs custom entrypoint scripts in `/entrypoint.d/*.sh`.
+- runs `hugo`.
 
 ```sh
 docker run --rm \
-        -v "${PWD}:/src" \
-        -v "/tmp/web:/workdir/public" \
+        # Provides the read-only source code in /src
+        # and obtain outputs in /workdir
+        -v ${PWD}:/src:ro \
+        -v /tmp/web:/workdir/public \
+        # custom entrypoint shell scripts
+        -v /scripts:/entrypoint.d \
         tcvle/hugodk \
+        # Other hugo cli options
         --baseURL "https://..."
 ```
